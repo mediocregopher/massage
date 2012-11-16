@@ -38,7 +38,7 @@ for types returned by other protocols and libraries as well.
 "string"
 
 => (parse-json 1 '(:string))
-1
+"1"
 
 => (parse-json [:not :a :string] '(:string))
 {:error :wronge_type, :should_be :string}
