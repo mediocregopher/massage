@@ -4,6 +4,8 @@ Clojure library for massaging a data structure into a specified schema
 
 ## Usage
 
+Add `[org.clojars.mediocregopher/massage "0.1.0"]` to your `:dependencies` list in your `project.clj`. From there you can `(use 'massage.json)`.
+
 ## JSON
 
 Currently there is only support for massaging data returned by a json parser library like (Cheshire)[https://github.com/dakrone/cheshire], but I've left room
