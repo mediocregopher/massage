@@ -11,7 +11,7 @@ for types returned by other protocols and libraries as well.
 
 ### Examples
 
-'''clojure
+```clojure
     (use 'massage.json)
     
     ;Parsing a number
@@ -74,7 +74,7 @@ for types returned by other protocols and libraries as well.
 
     => (parse-json [{:a 1} {:a 2} {:a "3"}] '(:list (:map-tpl {:a (:number)})))
     ({:a 1} {:a 2} {:a 3})
-'''
+```
 
 ## License
 
