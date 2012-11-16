@@ -61,7 +61,7 @@ for types returned by other protocols and libraries as well.
                                                               :c (:number :optional) }))})
 {:key1 {:c nil, :b 2, :a 1}}
 
-:Template errors include key error occured on
+;Template errors include key error occured on
 => (parse-json {:key1 "string"} {:key1 '(:number)})
 {:key :key1, :error :wrong_type, :should_be :number}
 
