@@ -129,9 +129,9 @@
 
 (defmulti parse-json (fn [json-data template]
     (if (map? template) :map
-                        :list)))
+                        :seq)))
 
-(defmethod parse-json :list [json-data options]
+(defmethod parse-json :seq [json-data options]
     (check-all-options json-data options))
 
 (defmethod parse-json :map [json-data template]
