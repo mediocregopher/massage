@@ -8,7 +8,7 @@ Add `[org.clojars.mediocregopher/massage "0.1.1"]` to your `:dependencies` list 
 
 ## JSON
 
-Currently there is only support for massaging data returned by a json parser library like (Cheshire)[https://github.com/dakrone/cheshire], but I've left room
+Currently there is only support for massaging data returned by a json parser library like [Cheshire](https://github.com/dakrone/cheshire), but I've left room
 for types returned by other protocols and libraries as well.
 
 ### Examples
