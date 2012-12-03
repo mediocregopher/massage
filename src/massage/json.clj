@@ -83,7 +83,7 @@
     "Tests for a number, possibly casting a string to a number"
     (cond (number? given-value) given-value
           (string? given-value)
-            (if (not (re-find #"-?[0-9]+\.?[0-9]*e?[0-9]*" given-value))
+            (if (not (re-find #"^-?[0-9]+\.?[0-9]*e?[0-9]*$" given-value))
                 (process-type-error keytype)
                 (read-string given-value))
           :else                 (process-type-error keytype)))
