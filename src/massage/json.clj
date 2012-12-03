@@ -6,7 +6,7 @@
 ; template  -> @template object
 ;
 ; @template -> { @key @keyspec [@key @keyspec ...] }
-; @key      -> :atom
+; @key      -> :atom | :massage/*
 ; @keyspec  -> ( @keytype [@option ...] )
 ; @keytype  -> :string | :number | :list | :object
 ;
@@ -150,15 +150,28 @@
     error return that error with :key set. Otherwise simply return the result.
     If given-value is nil we assume it is not set in the json, which is only
     allowed if the :optional option is given for this key in the template"
-    [tpl-key given-value template-value]
+    [data-key given-value template-value]
     (let [ keytype (first template-value)
            options (rest  template-value) ]
         (if (nil? given-value)
             (when-not (some #(= :optional %) options)
-                {:error :missing_key :key tpl-key})
+                {:error :missing_key :key data-key})
             (let [result (check-all-options given-value template-value)]
                 (if (and (contains? result :error) (not (contains? result :key)))
-                    (assoc result :key tpl-key) result)))))
+                    (assoc result :key data-key) result)))))
+
+(defn fill-template [json-data template]
+    (if-let [template-default (template :massage/*)]
+        (loop [json-head (first json-data)
+               json-tail (rest json-data)
+               tpl       template]
+            (if (nil? json-head) (dissoc tpl :massage/*)
+                (let [json-key (key json-head)
+                      json-val (val json-head)]
+                    (if (tpl json-key)
+                        (recur (first json-tail) (rest json-tail) tpl)
+                        (recur (first json-tail) (rest json-tail) (assoc tpl json-key template-default))))))
+        template))
 
 (defmulti parse-json
     "Main entry point of this module. Given json-data and a template, returns
@@ -178,7 +191,7 @@
     "If the second arg is a map then we go through each key and its value and send
     them to check-data. If it returns an error we immediately return that error,
     otherwise continue on to the next key/value in the template map"
-    (loop [ tpl-seq template
+    (loop [ tpl-seq (fill-template json-data template)
             ret-map {} ]
         (let [ tpl-seq-tail (rest  tpl-seq)
                tpl          (first tpl-seq)
