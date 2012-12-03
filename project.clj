@@ -1,4 +1,4 @@
-(defproject org.clojars.mediocregopher/massage "0.1.1"
+(defproject org.clojars.mediocregopher/massage "0.1.2"
   :description "Library for massaging data into a specified schema"
   :url "https://github.com/mediocregopher/massage"
   :license {:name "Eclipse Public License"
