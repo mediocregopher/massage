@@ -144,6 +144,17 @@
                 (if (contains? result :error) result
                     (recur result (first options) (rest options)))))))
 
+(defn is-optional 
+    "Given a list of options, returns the default value specified by the :optional
+    option, or :massage/not-optional if the parameter isn't optional"
+    [options]
+    (loop [ opt      (first options)
+            opt-tail (rest  options) ]
+        (if (nil? opt) :massage/not-optional
+            (cond (= :optional opt) nil
+                  (and (seq? opt) (= :optional (first opt))) (second opt)
+                  :else (recur (first opt-tail) (rest opt-tail))))))
+
 (defn check-data 
     "Given a key, the value for that key given in by the json (given-value) and
     the template, check given-value with check-all-options. If the return is an
@@ -154,8 +165,10 @@
     (let [ keytype (first template-value)
            options (rest  template-value) ]
         (if (nil? given-value)
-            (when-not (some #(= :optional %) options)
-                {:error :missing_key :key data-key})
+            (let [result (is-optional options)]
+                (if (= result :massage/not-optional) 
+                    {:error :missing_key :key data-key}
+                    result))
             (let [result (check-all-options given-value template-value)]
                 (if (and (contains? result :error) (not (contains? result :key)))
                     (assoc result :key data-key) result)))))
