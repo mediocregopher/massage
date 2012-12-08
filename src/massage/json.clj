@@ -8,7 +8,7 @@
 ; @template -> { @key @keyspec [@key @keyspec ...] }
 ; @key      -> :atom | :massage/*
 ; @keyspec  -> ( @keytype [@option ...] )
-; @keytype  -> :string | :number | :list | :object
+; @keytype  -> :bool | :string | :number | :list | :object
 ;
 ; @options (any key type) -> :optional
 ;
@@ -48,6 +48,16 @@
     (fn [given-value option] 
         (if (list? option) (first option)
             option)))
+
+(defmethod process-option :bool [given-value keytype]
+    (case given-value
+         true   true
+        "true"  true
+        :true   true
+         false  false
+        "false" false
+        :false  false
+        (process-type-error keytype)))
 
 (defmethod process-option :string [given-value keytype]
     "Tests for a string, possibly casts a number to a string"

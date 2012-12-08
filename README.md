@@ -4,7 +4,7 @@ Clojure library for massaging a data structure into a specified schema
 
 ## Usage
 
-Add `[org.clojars.mediocregopher/massage "0.1.3"]` to your `:dependencies` list in your `project.clj`. From there you can `(use 'massage.json)`.
+Add `[org.clojars.mediocregopher/massage "0.1.4"]` to your `:dependencies` list in your `project.clj`. From there you can `(use 'massage.json)`.
 
 ## JSON
 
@@ -51,6 +51,16 @@ for types returned by other protocols and libraries as well.
                                        (:!regex #"[0-9]")   ;Ensure the string doesn't match this one
                                        ))
 "some-string"
+
+;Parsing a boolean
+=> (parse-json true '(:bool))
+true
+
+=> (parse-json "true" '(:bool))
+true
+
+=> (parse-json :true '(:bool))
+true
 
 ;Templating objects
 => (parse-json {:key1 "string"} {:key1 '(:string) 
