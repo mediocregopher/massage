@@ -49,6 +49,9 @@
         (if (list? option) (first option)
             option)))
 
+(defmethod process-option :optional [given-value option]
+    given-value)
+
 (defmethod process-option :bool [given-value keytype]
     (case given-value
          true   true
