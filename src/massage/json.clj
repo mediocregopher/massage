@@ -71,7 +71,7 @@
 (defmethod process-option :maxlength [given-value option]
     "Makes sure a string or list isn't larger than a certain number"
     (if (> (count given-value) (last option))
-        {:error :too_long :min_length (last option)}
+        {:error :too_long :max_length (last option)}
         given-value))
 
 (defmethod process-option :minlength [given-value option]

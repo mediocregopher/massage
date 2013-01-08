@@ -82,7 +82,7 @@ true
 => (parse-json [1 2 3 4] '(:list (:minlength 3) (:maxlength 10)))
 [1 2 3 4]
 
-=> (parse-json [1 2 "3" "4"] '(:list (:map-tpl '(:number))))
+=> (parse-json [1 2 "3" "4"] '(:list (:map-tpl (:number))))
 (1 2 3 4)
 
 => (parse-json [{:a 1} {:a 2} {:a "3"}] '(:list (:map-tpl {:a (:number)})))
