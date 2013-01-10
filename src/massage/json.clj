@@ -217,7 +217,10 @@
     "If the second arg is a map then we go through each key and its value and send
     them to check-data. If it returns an error we immediately return that error,
     otherwise continue on to the next key/value in the template map"
-    (if (map? json-data)
+    (cond
+        (not (map? json-data)) (process-type-error :object)
+        (empty? template) json-data
+        :else
         (loop [ tpl-seq (fill-template json-data template)
                 ret-map {} ]
             (let [ tpl-seq-tail (rest  tpl-seq)
@@ -228,5 +231,4 @@
                 (if (contains? result :error) result
                     (let [filled-ret-map (assoc ret-map tpl-key result) ]
                     (if (empty? tpl-seq-tail) filled-ret-map
-                        (recur tpl-seq-tail filled-ret-map))))))
-        (process-type-error :object)))
+                        (recur tpl-seq-tail filled-ret-map))))))))

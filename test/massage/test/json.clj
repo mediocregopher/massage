@@ -95,3 +95,10 @@
                  :massage/* '(:string) }
                {:error :wrong_type :should_be :string :key :b})
 )
+
+(deftest emptys
+    (try-parse { :a 2 :b 3 :c 4 } {} { :a 2 :b 3 :c 4})
+    (try-parse "blah" {} {:error :wrong_type :should_be :object})
+    (try-parse { :a 2 :b 3 :c 4 } '() { :a 2 :b 3 :c 4})
+    (try-parse "blah" '() "blah")
+)
