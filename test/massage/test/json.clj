@@ -84,4 +84,14 @@
                                  :b (:number)
                                  :c (:string (:optional :default)) }))}
         {:embedded {:a "a" :b 1 :c :default}})
+
+    (try-parse { :a 2 :b 3 :c "hi" }
+               { :a         '(:number)
+                 :massage/* '(:string) }
+               { :a 2 :b "3" :c "hi" })
+
+    (try-parse { :a 2 :b [1 2 3] :c "hi" }
+               { :a         '(:number)
+                 :massage/* '(:string) }
+               {:error :wrong_type :should_be :string :key :b})
 )
