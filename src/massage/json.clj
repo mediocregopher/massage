@@ -188,15 +188,12 @@
 
 (defn fill-template [json-data template]
     (if-let [template-default (template :massage/*)]
-        (loop [json-head (first json-data)
-               json-tail (rest json-data)
-               tpl       template]
-            (if (nil? json-head) (dissoc tpl :massage/*)
-                (let [json-key (key json-head)
-                      json-val (val json-head)]
-                    (if (tpl json-key)
-                        (recur (first json-tail) (rest json-tail) tpl)
-                        (recur (first json-tail) (rest json-tail) (assoc tpl json-key template-default))))))
+        (dissoc
+            (reduce
+                (fn [tpl keyval] (if (tpl (key keyval)) tpl
+                    (assoc tpl (key keyval) template-default)))
+                template json-data)
+            :massage/*)
         template))
 
 (defmulti parse-json
