@@ -157,16 +157,19 @@
                 (if (contains? result :error) result
                     (recur result (first options) (rest options)))))))
 
+(defmacro bounce [thing] `(fn [] ~thing))
 (defn is-optional 
     "Given a list of options, returns the default value specified by the :optional
     option, or :massage/not-optional if the parameter isn't optional"
     [options]
-    (loop [ opt      (first options)
-            opt-tail (rest  options) ]
-        (if (nil? opt) :massage/not-optional
-            (cond (= :optional opt) nil
-                  (and (seq? opt) (= :optional (first opt))) (second opt)
-                  :else (recur (first opt-tail) (rest opt-tail))))))
+    (if-let
+        [packed (some #(cond
+                        (= :optional %) (bounce nil)
+                        (and (seq? %) (= :optional (first %))) (bounce (second %))
+                        :else nil)
+                      options)]
+            (packed)
+            :massage/not-optional))
 
 (defn check-data 
     "Given a key, the value for that key given in by the json (given-value) and
