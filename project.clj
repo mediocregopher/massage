@@ -1,6 +1,6 @@
-(defproject org.clojars.mediocregopher/massage "0.1.8"
+(defproject org.clojars.mediocregopher/massage "0.1.9"
   :description "Library for massaging data into a specified schema"
   :url "https://github.com/mediocregopher/massage"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[org.clojure/clojure "1.4.0"]])
+  :dependencies [[org.clojure/clojure "1.5.0"]])

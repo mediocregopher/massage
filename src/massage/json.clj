@@ -135,7 +135,7 @@
     of these calls return an error this will forward that error directly, not
     in the list"
     (let [mapped (map #(parse-json % (last option)) given-value)]
-        (if-let [error (first (filter #(contains? % :error) mapped))]
+        (if-let [error (first (filter #(and (map? %) (contains? % :error)) mapped))]
             error
             mapped)))
 
@@ -149,13 +149,13 @@
     always start a template with a type, the casted value of that type
     automatically gets sent into the process-option for the next option
     in the options list"
-    (loop [ current-value given-value
-            option  (first template-value)
-            options (rest template-value) ]
-        (if (nil? option) current-value
-            (let [result (process-option current-value option)]
-                (if (contains? result :error) result
-                    (recur result (first options) (rest options)))))))
+    (reduce
+        (fn [last-ret option]
+            (let [result (process-option last-ret option)]
+                (if (and (map? result) (contains? result :error)) (reduced result)
+                    result)))
+        given-value
+        template-value))
 
 (defmacro bounce [thing] `(fn [] ~thing))
 (defn is-optional 
@@ -186,7 +186,7 @@
                     {:error :missing_key :key data-key}
                     result))
             (let [result (check-all-options given-value template-value)]
-                (if (and (contains? result :error) (not (contains? result :key)))
+                (if (and (map? result) (contains? result :error) (not (contains? result :key)))
                     (assoc result :key data-key) result)))))
 
 (defn fill-template [json-data template]
@@ -221,14 +221,13 @@
         (not (map? json-data)) (process-type-error :object)
         (empty? template) json-data
         :else
-        (loop [ tpl-seq (fill-template json-data template)
-                ret-map {} ]
-            (let [ tpl-seq-tail (rest  tpl-seq)
-                   tpl          (first tpl-seq)
-                   tpl-key      (key tpl)
-                   tpl-val      (val tpl)
-                   result       (check-data tpl-key (json-data tpl-key) tpl-val) ]
-                (if (contains? result :error) result
-                    (let [filled-ret-map (assoc ret-map tpl-key result) ]
-                    (if (empty? tpl-seq-tail) filled-ret-map
-                        (recur tpl-seq-tail filled-ret-map))))))))
+        (reduce
+            (fn [ ret-map tpl ]
+                (let [ tpl-key (key tpl)
+                       tpl-val (val tpl)
+                       result  (check-data tpl-key (json-data tpl-key) tpl-val) ]
+                    (if (and (map? result) (contains? result :error))
+                        (reduced result)
+                        (assoc ret-map tpl-key result))))
+            {}
+            (fill-template json-data template))))
