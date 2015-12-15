@@ -98,3 +98,6 @@ true
 Copyright © 2012 Brian Picciano
 
 Distributed under the Eclipse Public License, the same as Clojure.
+
+
+For details visit: http://www.winkslondon.com/ 
